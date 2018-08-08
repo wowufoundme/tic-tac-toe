@@ -1,0 +1,183 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// Global variables
+
+// Board to play game on
+int BOARD[3][3] =
+{
+    { 5, 5, 5 },
+    { 5, 5, 5 },
+    { 5, 5, 5 }
+};
+
+bool MARKED[3][3] =
+{
+    { false, false, false },
+    { false, false, false },
+    { false, false, false }
+};
+
+// Labels for players
+int computerLabel, playerLabel;
+
+// Whose turn is it
+// 0 = Computer
+// 1 = Player
+int moveTurn;
+
+// Game conditions
+//  0 = Running
+//  1 = Win
+// -1 = Draw
+int GAME;
+
+// Functions
+void gameBegin();
+bool checkIfAlreadyMarked(int , int);
+void firstMove();
+void nextMove();
+bool checkWin(int[3][3]);
+void showBoard(int[3][3]);
+void gameEnd();
+
+// Begins game by assigning global variables
+void gameBegin()
+{
+    system("cls");
+
+    // Game initialized
+    GAME = 0;
+
+    // Ask player for symbols
+    cout<<"Do you want X or O?\n0 = \'O\'\n1 = \'X\'\nPlease enter 0 or 1: ";
+    cin>>playerLabel;
+    if(playerLabel == 0)
+        computerLabel = 1;
+    else if(playerLabel == 1)
+        computerLabel = 0;
+    else
+    {
+        cout<<"That wasn't an option! Bye Bye!";
+        exit(1);
+    }
+    // Randomly decide who moves first
+    int whoMoves = rand() % 2; // Gives either 0 or 1
+    if(whoMoves == 0)
+    {
+        moveTurn = 0; // Computer moves first
+        cout<<"First move: computer!\n";
+    }
+    else
+    {
+        moveTurn = 1; // Player moves first
+        cout<<"First move: player!\n";
+    }
+    // Call first move to get first move of the computer or player
+    firstMove();
+}
+
+// Function to check if position (x,y) is marked on the board.
+bool checkIfAlreadyMarked(int x, int y)
+{
+    if(MARKED[x][y] == true)
+        return true;
+    else
+        return false;
+}
+
+// First Move to move on the board.
+void firstMove()
+{
+    int posX, posY;
+
+    // If Computer has to move first
+    if (moveTurn == 0)
+    {
+        posX = rand() % 3;
+        posY = rand() % 3;
+        BOARD[posX][posY] = computerLabel;
+        MARKED[posX][posY] = true;
+        moveTurn = 1;
+    }
+    else
+    {
+        cout<<"Enter the x-coordinate(0-2): ";
+        cin>>posX;
+        cout<<"\nEnter the y-coordinate(0-2): ";
+        cin>>posY;
+        BOARD[posX][posY] = playerLabel;
+        MARKED[posX][posY] = true;
+        moveTurn = 0;
+    }
+}
+
+void nextMove()
+{
+    int posX, posY;
+    if (moveTurn == 1) // Player Moves
+    {
+        // Ask player for input
+        cout<<"Enter the x-coordinate(0-2): ";
+        cin>>posX;
+        cout<<"\nEnter the y-coordinate(0-2): ";
+        cin>>posY;
+        BOARD[posX][posY] = playerLabel;
+        MARKED[posX][posY] = true;
+    }
+    else
+    {
+        // Check if it can win in the next move.
+        //int BOARD_NEW = BOARD;
+        for (int i=0; i<2; i++)
+            for (int j=0; j<2; j++)
+                if (!checkIfAlreadyMarked(i, j))
+                {
+                    // Create a new copy of the array
+
+                    BOARD[i][j] = computerLabel;
+                    if()
+                }
+    }
+}
+
+bool checkWin(int tempBoard[3][3])
+{
+    // Check horizontal win
+    for(int i=0; i<2; i++)
+    {
+        if(BOARD[i][0] == BOARD[i][1] && BOARD[i][1] == BOARD[i][2] && BOARD[i][0] != 5)
+            gameEnd();
+    }
+
+    // Check vertical win
+    for(int j=0; j<2; j++)
+    {
+        if(BOARD[0][j] == BOARD[1][j] && BOARD[1][j] == BOARD[2][j] && BOARD[0][j] != 5)
+            gameEnd();
+    }
+
+    // Check diagonal win
+    if(BOARD[0][0] == BOARD[1][1] && BOARD[1][1] == BOARD[2][2] && BOARD[1][1] != 5)
+        gameEnd();
+
+    if(BOARD[0][2] == BOARD[1][1] && BOARD[1][1] == BOARD[2][0] && BOARD[1][1] != 5)
+        gameEnd();
+}
+
+void gameEnd()
+{
+    cout<<"thank you! the game has ended!";
+}
+
+
+int main()
+{
+    srand(time(0)); // Flushes randoms time generation
+    cout<<"Welcome to Tic Tac Toe! \n\nPress any key to continue";
+    getchar();
+    gameBegin();
+    cout<<"Compilation Successful!";
+    return 0;
+}
